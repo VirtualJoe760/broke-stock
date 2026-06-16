@@ -4,6 +4,17 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 18 — 2026-06-16 — Polygon/Massive price adapter (for the real L2)
+
+Done:
+- `broke_engine/data/polygon_store.py` — `PolygonPointInTimeStore` implementing `PointInTimeStore` over Polygon daily aggregates (point-in-time `ts <= as_of`). Configurable host (`POLYGON_BASE_URL`, default api.polygon.io) since Polygon rebranded to "Massive".
+- `config.polygon_base_url` added. Not imported in `data/__init__` (keeps the suite httpx-free); import via `broke_engine.data.polygon_store`.
+- Imports clean in the venv; 31 tests still pass. **UNVERIFIED against the live API** — needs a real `POLYGON_API_KEY` + network; host may need switching to api.massive.com.
+
+Pending: user signs in to Massive (Polygon) and adds `POLYGON_API_KEY` → then run the real(er) L2 on real prices + real post-cutoff headlines.
+
+---
+
 ## Pass 17 — 2026-06-16 — LIVE brain verified + L2 event-study pipeline
 
 Done:

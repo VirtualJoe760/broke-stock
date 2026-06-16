@@ -44,6 +44,7 @@ class Settings(BaseSettings):
 
     # Data
     polygon_api_key: str | None = None
+    polygon_base_url: str = "https://api.polygon.io"  # rebrand: set to api.massive.com if needed
     databento_api_key: str | None = None
     perplexity_api_key: str | None = None
 
