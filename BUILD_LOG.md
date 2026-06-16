@@ -4,6 +4,18 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 16 — 2026-06-16 — live brain wired (needs ANTHROPIC_API_KEY to run)
+
+Done (code written; runs once a key is present):
+- `AnthropicProvider.complete` implemented for real — calls the Anthropic SDK, forces **structured output** via a single `emit` tool whose input matches a JSON schema, caches the system block. Plain-text path too.
+- `broke_engine/signals/scorer.py` — `score_news(provider, ticker, headline, context)` → validated `Signal` (calibrated system prompt; surprise = not-yet-priced-in).
+- `scripts/score_demo.py` — one-command smoke test.
+- **VERIFIED (offline):** modules import without the SDK/key; provider resolves to `claude-opus-4-8`; all 30 tests still pass. (A live call needs the key — not run here; that would spend your tokens.)
+
+To run it: see "Wire the real brain" steps in the chat / below. Next after keys: Alpaca data adapter + the L2 event study.
+
+---
+
 ## ✅ BUILD COMPLETE (key-free scope) — loop stopped (2026-06-16)
 
 Everything buildable without real keys/data/trades is done, committed on `build/foundation`, and pushed to GitHub. **No keys used, nothing traded, nothing sent.** 15 commits.

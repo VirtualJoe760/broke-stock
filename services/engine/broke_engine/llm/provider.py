@@ -36,13 +36,42 @@ class AnthropicProvider(LLMProvider):
         self._api_key = api_key
         # Client is constructed lazily so the engine imports without a key present
         # (paper/mock work needs no key).
-        self._client = None
+        self._client: Any = None
+
+    def _client_or_create(self) -> Any:
+        if self._client is None:
+            import anthropic  # imported lazily so the engine loads without the SDK/key
+
+            # api_key=None lets the SDK read ANTHROPIC_API_KEY from the environment.
+            self._client = anthropic.Anthropic(api_key=self._api_key)
+        return self._client
 
     def complete(self, system: str, user: str, *, schema: dict[str, Any] | None = None) -> Any:
-        raise NotImplementedError(
-            "AnthropicProvider.complete is a Phase-1 stub. Implement with the anthropic SDK; "
-            "force structured output via a StructuredOutput tool when `schema` is provided."
+        client = self._client_or_create()
+        # Cache the (static) system block to cut cost on repeated calls.
+        system_blocks = [{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}]
+        messages = [{"role": "user", "content": user}]
+
+        if schema is None:
+            msg = client.messages.create(
+                model=self.model, max_tokens=1024, system=system_blocks, messages=messages
+            )
+            return "".join(b.text for b in msg.content if getattr(b, "type", None) == "text")
+
+        # Structured output: force a single tool call whose input matches `schema`.
+        tool = {"name": "emit", "description": "Return the structured result.", "input_schema": schema}
+        msg = client.messages.create(
+            model=self.model,
+            max_tokens=1024,
+            system=system_blocks,
+            messages=messages,
+            tools=[tool],
+            tool_choice={"type": "tool", "name": "emit"},
         )
+        for b in msg.content:
+            if getattr(b, "type", None) == "tool_use" and b.name == "emit":
+                return b.input
+        raise RuntimeError("model did not call the 'emit' tool")
 
 
 class OpenAICompatibleProvider(LLMProvider):

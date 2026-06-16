@@ -7,5 +7,6 @@ from .models import (
     TimeHorizon,
     signal_json_schema,
 )
+from .scorer import score_news
 
-__all__ = ["Signal", "EventType", "Magnitude", "TimeHorizon", "signal_json_schema"]
+__all__ = ["Signal", "EventType", "Magnitude", "TimeHorizon", "signal_json_schema", "score_news"]
