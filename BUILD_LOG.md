@@ -4,6 +4,17 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 11 — 2026-06-16 — trader cockpit page (+ deps installed, build verified)
+
+Done:
+- `apps/web/app/trader/page.tsx` — the trader cockpit on mock data: MODE banner, portfolio metric cards, **equity curve** (lightweight-charts, dynamically imported client-side), positions blotter with AI confidence, **AI proposal approve/reject** (stateful), order ticket, risk bars + **kill switch**.
+- Ran `npm install` (Next 15 + react + lightweight-charts) and committed `package-lock.json`.
+- **VERIFIED:** `next build` compiled successfully, types valid, static pages generated for `/` and `/trader` (exit 0). The page is real, not just plausible.
+
+Next: `/digest` content page (AI brief, theses, scored news), then FastAPI endpoints, alert/agent stubs, CI.
+
+---
+
 ## Pass 10 — 2026-06-16 — Next.js frontend scaffold
 
 Done (hand-written, no npm install yet):
