@@ -4,6 +4,17 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 23 — 2026-06-16 — RE-SCOPE to augmentation (ADR-014)
+
+Two null edge tests → decision to re-position the product from "beats the market" to **augmentation** (research + monitoring + disciplined process + the validation engine). Honest, sellable, immune to the no-edge base rate.
+
+- New: `docs/05-research/edge-findings.md` (the evidence record).
+- New: `ADR-014` (re-scope rationale).
+- Updated README + system-overview to lead with augmentation and an honest "no alpha promised" note.
+- Trading remains a *feature* (paper-first, validation-gated), not the core promise. Edge-hunting continues only as cheap opt-in experiments.
+
+---
+
 ## Pass 22 — 2026-06-16 — Signal #2 (analyst revisions): NO edge either
 
 FMP free tier: transcripts + news = PAID (402); **analyst grades + fundamentals = free**. Pivoted to a pure factor test (no LLM): long analyst upgrades, short downgrades, 5-day forward returns.

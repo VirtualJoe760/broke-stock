@@ -63,6 +63,6 @@ Two philosophies, used as a hybrid ([agent runtime & scheduling](../01-architect
 - **Containerized, multi-arch, 12-factor** — develop on Windows, run on the Mac mini (ARM), deploy to a Linux VPS (x86) with no porting ([ADR-013](decisions-log.md), [deployment & portability](../08-deployment/deployment-and-portability.md)).
 - **Self-hostable, single-tenant, clone & deploy** — each user runs their own instance with their own keys; we don't hold others' funds/credentials ([ADR-012](decisions-log.md), [distribution](../08-deployment/distribution.md)).
 
-## Default trading profile (current)
+## Positioning (current)
 
-Swing / event-driven equities + long-dated options (LEAPS), human-in-the-loop first, hard risk gate, paper-validated before live. Not intraday/day-trading (see [ADR-002](decisions-log.md)).
+**Augmentation, not alpha** ([ADR-014](decisions-log.md)). Preliminary edge tests found no tradeable signal in the easy data ([edge findings](../05-research/edge-findings.md)), so the product's value is research + monitoring + disciplined process + the validation engine — it does not promise market-beating returns. Trading capability (paper-first, swing/event-driven equities + LEAPS, human-in-the-loop, hard risk gate) remains a feature; any strategy must clear the [validation ladder](../05-research/validation-methodology.md) before live capital. Not intraday/day-trading ([ADR-002](decisions-log.md)).

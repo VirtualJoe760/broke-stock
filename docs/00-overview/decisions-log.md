@@ -131,3 +131,13 @@ Architecture Decision Records. Each captures a decision, why, and what would cha
 **Why:** The container is the portability layer — "moving the project" becomes clone + `compose up`. Multi-arch is required because the Mac mini is ARM and most VPS are x86, and some quant libs have native components. Detail: [deployment & portability](../08-deployment/deployment-and-portability.md).
 
 **Changes it if:** never in spirit; specific orchestration (compose → k8s) may change at scale.
+
+---
+
+## ADR-014 — Re-scope from alpha generation to augmentation
+
+**Decision:** The product's core value is **AI-assisted research, monitoring, and disciplined workflow** — not beating the market. Concretely: the financial digest, the trader cockpit, news/signal summarization, alerting, paper-trading practice, and the **validation engine** itself. We do NOT promise alpha. Edge-hunting continues only as cheap, opt-in experiments via the harness; the product does not depend on any of them succeeding.
+
+**Why:** Two preliminary L2 tests (headline-surprise, analyst-revisions) found **no edge** ([edge findings](../05-research/edge-findings.md)) — consistent with efficient markets and the literature (LLMs augment, they don't autonomously generate alpha). Positioning the product on augmentation is honest, defensible to a client, and immune to the "no edge" base rate. Selling "beats the market" would be AI-washing.
+
+**Changes it if:** a signal clears the validation ladder to L4 (paper-proven) with real significance — then a *validated* strategy can be offered as a feature, still without over-promising.

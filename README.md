@@ -1,8 +1,8 @@
 # broke
 
-An AI-assisted equities research-and-execution platform. Claude turns unstructured market information (news, filings, transcripts) into scored, structured signals; deterministic code handles sizing, risk, and execution; and the same engine runs identically in backtest, paper, and live.
+An **AI trading-augmentation platform**: Claude turns unstructured market information (news, filings, analyst actions) into scored signals and a daily digest; two dashboards + alerts keep a human in the loop; deterministic code handles sizing, risk, and execution; and a **validation engine** tests every idea before a dollar is risked — the same engine runs identically in backtest, paper, and live.
 
-The product is not "AI that trades." The product is a **validation engine** that turns trading *ideas* into *proven, tested results* — and refuses to risk real money on anything that hasn't earned its way up the ladder.
+**Honest positioning ([ADR-014](docs/00-overview/decisions-log.md)):** preliminary edge tests found **no tradeable alpha in the easy, freely-available signals** ([edge findings](docs/05-research/edge-findings.md)) — as expected from efficient markets and the LLM-trading literature. So this product's value is **augmentation** — faster research, monitoring, and disciplined process — **not** "AI that beats the market." It does not promise alpha; it refuses to risk money on anything unvalidated.
 
 ## Guiding principles
 
