@@ -4,6 +4,18 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 9 — 2026-06-16 — execution adapter + simulated matcher
+
+Done:
+- `broke_engine/execution/` — `ExecutionAdapter` interface + `Order`/`Fill` + `SimulatedMatcher` (paper fills: slippage by side, commission, **idempotent** client_order_id so resubmits never double-fill, net position tracking).
+- `test_execution.py` (5 cases). **Verified offline:** buy 100→100.1, sell 100→99.9, idempotent (pos 5 not 10), commission 1.0, net position 6.
+
+The deterministic Python core is now complete and tested: **data store, signal schema, sizing, risk gate, execution, wheel harness.**
+
+Next: the **Next.js frontend** in apps/web (trader cockpit + content digest on mock data) — needs an `npm` install (network); if unavailable, commit the hand-written app source and note it. Then FastAPI endpoints, alert/agent stubs, CI.
+
+---
+
 ## Pass 8 — 2026-06-16 — strategy & sizing
 
 Done:
