@@ -20,7 +20,8 @@ build/
 .turbo/
 
 # Data (never commit market data, snapshots, or account info)
-data/
+# NOTE: anchored to repo root so it does NOT ignore the engine's broke_engine/data package.
+/data/
 *.parquet
 *.duckdb
 *.sqlite

@@ -4,6 +4,18 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 20 — 2026-06-16 — FIX: gitignore was excluding the engine data package
+
+**Bug caught:** `.gitignore` had a broad `data/` rule (intended for market-data dumps) that silently ignored `services/engine/broke_engine/data/` — so `store.py`, `models.py`, `polygon_store.py`, `polygon_news.py`, `__init__.py` were **never committed**. A clean clone / CI would fail to import the data layer. (Local runs worked only because the files exist on disk.)
+
+Fix:
+- `.gitignore`: `data/` → `/data/` (anchored to repo root only).
+- Added the 5 previously-ignored data-layer files (includes the Polygon adapter timeout 15s→30s + retry fix).
+
+Lesson for the project: never trust "commit succeeded" alone — verify files are actually tracked. Validation-first applies to the build too.
+
+---
+
 ## Pass 19 — 2026-06-16 — FIRST REAL L2 (real news + real prices + Claude)
 
 Ran `scripts/real_l2.py`: real Polygon prices + real Polygon news (May 2026, post-cutoff) + Claude scoring, 15 events across AAPL/NVDA/MSFT/AMZN/AMD, 5-day forward returns.
