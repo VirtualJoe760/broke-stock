@@ -4,6 +4,16 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 25 — 2026-06-16 — Congress aggregation (by-member, consensus, named filter)
+
+Added `aggregate_by_member`, `consensus_buys`, `trades_for_member` + pagination to `congress.py`; `scripts/congress_aggregate.py` demo. Live: 35 recent trades, most-active = Ro Khanna (11 buys); named filter works.
+
+**Free-tier ceiling (honest):** only a shallow recent cross-member window is free. So a real **Pelosi tracker** (her full history) and **"best traders" performance ranking** need per-member historical data — **paywalled** on FMP (by-name = 402). Pelosi wasn't even in the recent free window; consensus found no overlap (window too small).
+
+Decision pending: pay for deeper congressional data (FMP paid / Quiver / Unusual Whales) to do the full Pelosi/best-traders vision, or ship the free aggregation as a "recent smart-money activity" surface. Survivorship caveat stands for any performance ranking.
+
+---
+
 ## Pass 24 — 2026-06-16 — Copy-trading feed: congressional trades (live)
 
 New augmentation feature: `data/congress.py` ingests FMP `senate-latest` + `house-latest` (free) → recent congressional stock trades (symbol, member, buy/sell, amount, disclosure + transaction dates, source link). `scripts/congress_feed.py` shows the feed.
