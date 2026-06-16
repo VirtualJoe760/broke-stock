@@ -4,6 +4,37 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## ✅ BUILD COMPLETE (key-free scope) — loop stopped (2026-06-16)
+
+Everything buildable without real keys/data/trades is done, committed on `build/foundation`, and pushed to GitHub. **No keys used, nothing traded, nothing sent.** 15 commits.
+
+### Built & verified
+- **Engine (Python), 30 tests passing:** point-in-time data store (no-lookahead), Claude signal schema, strategy sizing (decay + vol-scaled), risk gate (limits + kill switch), execution adapter + simulated matcher, wheel backtest harness, alert engine (rules + NoopDispatcher).
+- **API:** FastAPI endpoints + WebSocket stub (POST /orders proposes only) — py_compile verified.
+- **Frontend (Next.js), `next build` passes:** landing + `/trader` cockpit (positions, AI proposal approve/reject, risk panel, kill switch, equity chart) + `/digest` (AI brief, theses, scored news, curated media), all on mock data.
+- **CI:** GitHub Actions (engine ruff+pytest; web npm ci + next build).
+
+### Needs you (real keys / data / supervision — by design)
+1. **No edge proven.** Wheel metrics are mock/proxy noise (pre-L2). First real work: implement `AnthropicProvider.complete`, wire real market data into `DuckDBPointInTimeStore`, and run the **L2 event study**.
+2. **Engine venv:** the machine's global FastAPI/starlette are mismatched — create a venv in `services/engine` and `pip install -e ".[dev]"` so the API runs and CI mirrors local.
+3. **Heads-up for CI / clean clones:** `apps/web/package.json` currently has a `thinkbigjoe: file:../../../thinkbigjoe` dependency (points outside the repo). It works on this machine but will break `npm ci` in CI and on a fresh clone — recommend removing it.
+4. Add real keys to a local `.env` (Anthropic, Alpaca **paper**) — never in chat. Ships in paper mode; nothing trades until you opt in.
+
+### Review
+`git checkout build/foundation` (or open the PR). Engine: `cd services/engine && pytest`. Web: `cd apps/web && npm run dev`.
+
+---
+
+## Pass 15 — 2026-06-16 — CI workflow + full suite green
+
+Done:
+- `.github/workflows/ci.yml` — engine job (setup-python, `pip install -e ".[dev]"`, ruff, pytest) + web job (setup-node, `npm ci`, `npm run build`).
+- **VERIFIED:** full engine suite `30 passed` locally.
+
+Key-free scope complete → **loop stopped** (no further wakeup).
+
+---
+
 ## Pass 14 — 2026-06-16 — alert engine skeleton
 
 Done:
