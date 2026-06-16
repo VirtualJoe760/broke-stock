@@ -4,6 +4,19 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 4 — 2026-06-16 — Phase 1: point-in-time data store
+
+Done:
+- `broke_engine/data/` — `Bar` model + `PointInTimeStore` interface.
+- `MockPointInTimeStore`: deterministic seeded synthetic daily bars (weekdays), each bar's `ingest_ts == close time` so `as_of` enforces no-lookahead. Runs with zero keys/data.
+- `DuckDBPointInTimeStore`: stub for the real Parquet/DuckDB store (filters `ingest_ts <= as_of`).
+- Test `test_data_store.py` (no-lookahead + determinism).
+- **Verified live** (stdlib only): 10 bars to the as_of date, no bar from the future, reproducible. This is the anti-data-leakage foundation the validation ladder depends on.
+
+Next: Claude signal schema as pydantic models, then the wheel backtest/event-study harness on this mock data.
+
+---
+
 ## Pass 3 — 2026-06-16 — Drizzle schema (app state)
 
 Done:
