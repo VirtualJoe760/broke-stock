@@ -4,6 +4,12 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 28 — 2026-06-16 — Bundle DB + auth with thinkbigjoe (ADR-016)
+
+broke.finance is a product under the thinkbigjoe consulting umbrella → **shares thinkbigjoe's Neon DB + better-auth** (advisors get SSO). All broke tables moved into a dedicated **`broke` Postgres schema** (`pgSchema("broke")`) so they never collide with thinkbigjoe's tables in the same database. Updated `schema.ts`, `multi-tenancy.md`, added ADR-016.
+
+Still pending for deploy: remove the unrelated `apps/web` `file:../../../thinkbigjoe` npm dep (breaks Vercel build; sharing the DB does not need it) — awaiting explicit OK.
+
 ## Pass 27 — 2026-06-16 — PIVOT: multi-tenant membership SaaS (broke.finance)
 
 Domain `broke.finance` purchased. New direction: a **multi-tenant membership SaaS** — software/signals only, users BYO broker or paper, we never hold funds ([ADR-015](docs/00-overview/decisions-log.md), supersedes ADR-012).

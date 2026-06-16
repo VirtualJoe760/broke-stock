@@ -6,7 +6,9 @@
 
 A multi-tenant membership product. Every user gets their own customizable instance of the feed + tooling; we sell access (tiers), **not** money management.
 
-- **Auth:** better-auth (email + OAuth) on Neon. It owns the `user`/`session` tables; app data references the better-auth **user id** (text).
+**Bundled with thinkbigjoe ([ADR-016](../00-overview/decisions-log.md)):** broke.finance is a product *under the thinkbigjoe consulting umbrella*, so it **shares thinkbigjoe's Neon database and better-auth** (one login across the ecosystem — advisors get SSO). broke's tables live in a dedicated **`broke` Postgres schema** (`pgSchema("broke")`) so they never collide with thinkbigjoe's tables in the same DB.
+
+- **Auth:** shared better-auth (thinkbigjoe's). App data references the better-auth **user id** (text). broke does not run its own separate auth.
 - **Tenant scoping:** every app row carries a `user_id`. `accounts` (paper/live) belong to a user; `orders`/`positions`/`fills` hang off the account. The API only ever returns the caller's own rows.
 - **Customization:** `user_preferences` (feed config + risk prefs as JSON), `watchlist_items`, `follows` (congress members / funds / in-app strategies / copy-platform traders).
 - **BYO broker:** `broker_connections` stores `provider`, `mode`, `status`, and a `credentials_ref` — **a pointer to an encrypted secret store, never the raw key.** We never hold funds or place trades as a manager.

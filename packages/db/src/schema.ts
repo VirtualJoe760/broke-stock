@@ -1,22 +1,18 @@
-// Drizzle schema for app state (Postgres / Neon).
-// Time-series ticks live in QuestDB/DuckDB, NOT here.
-// See docs/01-architecture/persistence-and-events.md.
+// Drizzle schema for broke app state.
+// Co-located in thinkbigjoe's Neon database under a dedicated "broke" Postgres schema,
+// so broke's tables never collide with thinkbigjoe's. (broke.finance is a thinkbigjoe product.)
+// Time-series ticks live in QuestDB/DuckDB, NOT here. See docs/01-architecture/persistence-and-events.md
+// and docs/01-architecture/multi-tenancy.md.
 
-import {
-  pgTable,
-  pgEnum,
-  uuid,
-  text,
-  timestamp,
-  numeric,
-  jsonb,
-  boolean,
-} from "drizzle-orm/pg-core";
+import { pgSchema, uuid, text, timestamp, numeric, jsonb, boolean } from "drizzle-orm/pg-core";
 
-export const tradingMode = pgEnum("trading_mode", ["paper", "live"]);
-export const orderSide = pgEnum("order_side", ["buy", "sell"]);
-export const orderType = pgEnum("order_type", ["market", "limit", "stop", "bracket"]);
-export const orderStatus = pgEnum("order_status", [
+// All broke tables live in the "broke" schema (isolated from thinkbigjoe's tables in the same DB).
+export const broke = pgSchema("broke");
+
+export const tradingMode = broke.enum("trading_mode", ["paper", "live"]);
+export const orderSide = broke.enum("order_side", ["buy", "sell"]);
+export const orderType = broke.enum("order_type", ["market", "limit", "stop", "bracket"]);
+export const orderStatus = broke.enum("order_status", [
   "proposed",
   "pending",
   "filled",
@@ -24,11 +20,18 @@ export const orderStatus = pgEnum("order_status", [
   "cancelled",
   "rejected",
 ]);
-export const validationLevel = pgEnum("validation_level", ["L0", "L1", "L2", "L3", "L4", "L5"]);
+export const validationLevel = broke.enum("validation_level", ["L0", "L1", "L2", "L3", "L4", "L5"]);
+export const membershipTier = broke.enum("membership_tier", ["free", "pro", "broker"]);
+export const followKind = broke.enum("follow_kind", [
+  "congress_member",
+  "fund",
+  "strategy",
+  "platform_trader",
+]);
 
-export const accounts = pgTable("accounts", {
+export const accounts = broke.table("accounts", {
   id: uuid("id").defaultRandom().primaryKey(),
-  userId: text("user_id").notNull(), // tenant owner (better-auth user id)
+  userId: text("user_id").notNull(), // tenant owner (better-auth user id, shared with thinkbigjoe)
   mode: tradingMode("mode").notNull().default("paper"),
   broker: text("broker").notNull().default("alpaca"),
   equity: numeric("equity", { precision: 18, scale: 2 }).notNull().default("0"),
@@ -37,7 +40,7 @@ export const accounts = pgTable("accounts", {
 });
 
 // Validation level gates capital — nothing live below L4 (see validation-methodology.md).
-export const strategies = pgTable("strategies", {
+export const strategies = broke.table("strategies", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
   validationLevel: validationLevel("validation_level").notNull().default("L0"),
@@ -46,7 +49,7 @@ export const strategies = pgTable("strategies", {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
-export const orders = pgTable("orders", {
+export const orders = broke.table("orders", {
   id: uuid("id").defaultRandom().primaryKey(),
   accountId: uuid("account_id")
     .notNull()
@@ -62,7 +65,7 @@ export const orders = pgTable("orders", {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
-export const positions = pgTable("positions", {
+export const positions = broke.table("positions", {
   id: uuid("id").defaultRandom().primaryKey(),
   accountId: uuid("account_id")
     .notNull()
@@ -74,7 +77,7 @@ export const positions = pgTable("positions", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
-export const fills = pgTable("fills", {
+export const fills = broke.table("fills", {
   id: uuid("id").defaultRandom().primaryKey(),
   orderId: uuid("order_id")
     .notNull()
@@ -87,7 +90,7 @@ export const fills = pgTable("fills", {
 });
 
 // Every AI decision, order, alert is logged and reconstructable (audit + compliance).
-export const audit = pgTable("audit", {
+export const audit = broke.table("audit", {
   id: uuid("id").defaultRandom().primaryKey(),
   ts: timestamp("ts", { withTimezone: true }).defaultNow().notNull(),
   actor: text("actor").notNull(), // 'agent' | 'human' | 'system'
@@ -97,21 +100,17 @@ export const audit = pgTable("audit", {
   correlationId: uuid("correlation_id"),
 });
 
-// --- Multi-tenant SaaS (broke.finance): per-user customization, BYO broker, memberships ---
-// Auth tables (user/session) are managed by better-auth; these reference its user id (text).
+// --- Multi-tenant SaaS: per-user customization, BYO broker, memberships ---
+// Auth (user/session) handled by better-auth (shared with thinkbigjoe); these reference its user id.
 
-export const membershipTier = pgEnum("membership_tier", ["free", "pro", "broker"]);
-export const followKind = pgEnum("follow_kind", ["congress_member", "fund", "strategy", "platform_trader"]);
-
-// Per-user feed + trading customization (flexible JSON so the product can evolve).
-export const userPreferences = pgTable("user_preferences", {
+export const userPreferences = broke.table("user_preferences", {
   userId: text("user_id").primaryKey(),
   feedConfig: jsonb("feed_config").notNull().default({}), // sectors, sources, tickers, filters
   riskPrefs: jsonb("risk_prefs").notNull().default({}), // limits, sizing, autopilot on/off
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
-export const watchlistItems = pgTable("watchlist_items", {
+export const watchlistItems = broke.table("watchlist_items", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: text("user_id").notNull(),
   symbol: text("symbol").notNull(),
@@ -119,7 +118,7 @@ export const watchlistItems = pgTable("watchlist_items", {
 });
 
 // Who/what a user follows (a congress member, a fund, an in-app strategy, a copy-platform trader).
-export const follows = pgTable("follows", {
+export const follows = broke.table("follows", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: text("user_id").notNull(),
   kind: followKind("kind").notNull(),
@@ -129,7 +128,7 @@ export const follows = pgTable("follows", {
 });
 
 // BYO broker: we NEVER store raw keys — credentials_ref points at an encrypted secret store entry.
-export const brokerConnections = pgTable("broker_connections", {
+export const brokerConnections = broke.table("broker_connections", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: text("user_id").notNull(),
   provider: text("provider").notNull(), // alpaca / ibkr / ...
@@ -139,7 +138,7 @@ export const brokerConnections = pgTable("broker_connections", {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 });
 
-export const memberships = pgTable("memberships", {
+export const memberships = broke.table("memberships", {
   userId: text("user_id").primaryKey(),
   tier: membershipTier("tier").notNull().default("free"),
   status: text("status").notNull().default("active"),

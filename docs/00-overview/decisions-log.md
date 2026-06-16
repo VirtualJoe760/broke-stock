@@ -151,3 +151,13 @@ Architecture Decision Records. Each captures a decision, why, and what would cha
 **Why:** the product vision (memberships for brokers/day-traders, customizable, copy-trading) and the only lean + legal path — software, not money management. **Supersedes [ADR-012](#adr-012--distribution-self-hostable-single-tenant-clone--deploy)** (single-tenant self-host), which fit a personal/self-host framing we've moved past.
 
 **Changes it if:** we ever custody funds or manage accounts (→ broker-dealer/RIA licensing required, a deliberate separate decision), or a regulator deems the signals "advice" (→ tighten to pure data/education).
+
+---
+
+## ADR-016 — Bundle DB + auth with thinkbigjoe (broke is a thinkbigjoe product)
+
+**Decision:** broke.finance shares **thinkbigjoe's Neon database and better-auth** rather than standing up its own. broke's tables live in a dedicated **`broke` Postgres schema** (isolated from thinkbigjoe's tables in the same DB). Users authenticate once across the thinkbigjoe ecosystem (SSO); broke references the shared better-auth user id.
+
+**Why:** broke is a productized platform sold to financial advisors **under the thinkbigjoe consulting brand** — shared infra is simpler, cheaper, and gives advisors one login. Schema isolation keeps the two products' data cleanly separated. Note: this is shared *database/auth*, NOT a code-level npm dependency — the `apps/web` `file:../../../thinkbigjoe` dep is unrelated and should be removed (it breaks the Vercel build).
+
+**Changes it if:** broke needs to scale/sell independently of thinkbigjoe (→ split to its own DB/auth), or data-isolation/compliance requires separate databases.
