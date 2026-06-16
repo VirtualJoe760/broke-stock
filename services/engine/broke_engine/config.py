@@ -5,11 +5,26 @@ See docs/08-deployment/deployment-and-portability.md (12-factor) and .env.exampl
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+# Load env from the engine dir AND the repo root, so a key in services/engine/.env
+# OR broke/.env OR broke/.env.local all work (later files win). Resolved from this
+# file's location, so it's independent of the current working directory.
+_ENGINE_DIR = Path(__file__).resolve().parents[1]  # services/engine
+_REPO_ROOT = Path(__file__).resolve().parents[3]  # broke
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=(
+            str(_ENGINE_DIR / ".env"),
+            str(_REPO_ROOT / ".env"),
+            str(_REPO_ROOT / ".env.local"),
+        ),
+        extra="ignore",
+    )
 
     # Mode
     trading_mode: str = "paper"  # paper | live
