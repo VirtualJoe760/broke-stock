@@ -4,6 +4,18 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 17 — 2026-06-16 — LIVE brain verified + L2 event-study pipeline
+
+Done:
+- **Live Claude call VERIFIED** (real key + credits): `score_news` returned a calibrated `Signal` (NVDA, macro, surprise 0.25, confidence 0.55 — correctly skeptical that the move was already priced in). The brain works end-to-end.
+- `config.py` now loads `services/engine/.env` + repo-root `.env`/`.env.local` (cwd-independent).
+- **L2 event-study harness** `broke_engine/research/event_study.py`: score each news event → join realized forward return from a PointInTimeStore → bucket by surprise/sentiment → long-short spread. `test_event_study.py` (FakeProvider, no Anthropic) green; **31 tests total**.
+- `scripts/event_study_demo.py` ran live (3 Claude calls) end-to-end: n=3, spread computed. **Explicitly pipeline-only — synthetic prices, so the returns are meaningless.**
+
+⚠️ For a REAL L2 verdict (does the signal actually predict returns?): needs REAL point-in-time news + prices (Alpaca/Polygon) and **post-training-cutoff dates** (else data leakage). That data wiring is the next unlock — needs Alpaca/Polygon keys.
+
+---
+
 ## Pass 16 — 2026-06-16 — live brain wired (needs ANTHROPIC_API_KEY to run)
 
 Done (code written; runs once a key is present):
