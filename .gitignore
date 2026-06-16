@@ -1,0 +1,33 @@
+# Secrets / credentials
+.env
+.env.*
+*.key
+secrets/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Node / Next.js
+node_modules/
+.next/
+dist/
+build/
+.turbo/
+
+# Data (never commit market data, snapshots, or account info)
+data/
+*.parquet
+*.duckdb
+*.sqlite
+snapshots/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
