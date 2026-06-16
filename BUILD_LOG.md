@@ -4,6 +4,21 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 19 — 2026-06-16 — FIRST REAL L2 (real news + real prices + Claude)
+
+Ran `scripts/real_l2.py`: real Polygon prices + real Polygon news (May 2026, post-cutoff) + Claude scoring, 15 events across AAPL/NVDA/MSFT/AMZN/AMD, 5-day forward returns.
+
+**Result: no edge demonstrated — and that's an honest, informative null, not a bug.**
+- Claude scored ~all 15 headlines **surprise ≤ 0.40** (mostly ≤ 0.10) → none cleared the 0.5 surprise gate → 0 longs, 0 shorts → spread 0.0%.
+- Why: the free news endpoint returned **generic market commentary** ("Could SpaceX overtake Nvidia", ETF comparisons), NOT company-specific catalysts. Claude correctly judged them non-actionable. Garbage in → no signal. The system stayed flat, which is correct behavior.
+- Side note: 3 headlines/ticker clustered on near-identical dates → identical forward returns (e.g. AMD +34% window) — not independent samples.
+
+**What a real verdict needs (next):** catalyst-grade news (earnings/guidance/filings/downgrades), many more events across DIVERSE dates, costs modeled, and out-of-sample splits. This pass proved the pipeline on real data and surfaced the true bottleneck = **news quality + sample size**, exactly what the validation ladder is meant to catch.
+
+New code: `broke_engine/data/polygon_news.py` (news fetcher), `scripts/real_l2.py` (cached store, rate-limit-safe).
+
+---
+
 ## Pass 18 — 2026-06-16 — Polygon/Massive price adapter (for the real L2)
 
 Done:
