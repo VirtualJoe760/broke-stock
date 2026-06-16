@@ -4,6 +4,19 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 13 — 2026-06-16 — FastAPI endpoints + WebSocket stub
+
+Done:
+- `broke_engine/mockdata.py` — engine-side mock data (portfolio, positions, orders, strategies, signals, digest, alerts).
+- Expanded `broke_engine/api.py` with REST endpoints from the API doc: GET /health, /portfolio, /positions, /orders, /strategies, /signals, /digest/today, /alerts; **POST /orders returns a *proposed* order only (never executes)**; plus a `/ws` WebSocket stub.
+- **VERIFIED:** `py_compile` clean on api.py + mockdata.py; mockdata loads (3 positions, 3 strategies).
+
+⚠️ ENV NOTE (for the user, not a code bug): the globally-installed FastAPI/starlette are version-mismatched (`Router.__init__() got an unexpected keyword 'on_startup'`), so a *runtime* import fails. Fix by using a venv with the pinned deps: `python -m venv .venv` in services/engine, then `pip install -e ".[dev]"`. The code itself is standard FastAPI and parses cleanly.
+
+Next: (D) alert engine skeleton (rule eval + NoopDispatcher, with tests), then (E) CI workflow + more tests.
+
+---
+
 ## Pass 12 — 2026-06-16 — content digest page
 
 Done:
