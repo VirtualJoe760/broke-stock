@@ -4,6 +4,16 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 14 — 2026-06-16 — alert engine skeleton
+
+Done:
+- `broke_engine/alerts/` — `AlertRule`/`Alert`/`AlertType`/`Tier`, a pure `evaluate(rules, state)` (price target → notice, stop → urgent, daily-loss → critical, high-confidence signal → notice), and an `AlertDispatcher` interface with `NoopDispatcher` (records would-be sends, **NO real network send**).
+- `test_alerts.py` (5 cases). **Verified offline:** all tiers fire correctly; signal matches only the high-confidence ticker; NoopDispatcher records 1 and sends nothing.
+
+Last chunk next: (E) GitHub Actions CI (engine ruff+pytest, web next build) + final summary, then the loop stops.
+
+---
+
 ## Pass 13 — 2026-06-16 — FastAPI endpoints + WebSocket stub
 
 Done:
