@@ -1,6 +1,8 @@
 # Distribution
 
-> Status: drafted. Model chosen: **self-hostable, single-tenant, clone & deploy** ([ADR-012](../00-overview/decisions-log.md)).
+> ⚠️ **SUPERSEDED.** The model is now a **multi-tenant membership SaaS** at broke.finance ([ADR-015](../00-overview/decisions-log.md)) — software/signals only, users BYO broker, we never hold funds. The single-tenant self-host model below ([ADR-012](../00-overview/decisions-log.md)) is kept for history.
+
+> ~~Status: drafted. Model chosen: **self-hostable, single-tenant, clone & deploy** (ADR-012).~~
 
 ## The model
 

@@ -2,6 +2,8 @@
 
 An **AI trading-augmentation platform**: Claude turns unstructured market information (news, filings, analyst actions) into scored signals and a daily digest; two dashboards + alerts keep a human in the loop; deterministic code handles sizing, risk, and execution; and a **validation engine** tests every idea before a dollar is risked — the same engine runs identically in backtest, paper, and live.
 
+**Delivery:** a multi-tenant **membership SaaS** at **broke.finance** ([ADR-015](docs/00-overview/decisions-log.md)) — members customize their feed + trading, follow members/funds/strategies, and connect their own broker (BYO) or paper-trade. We sell software/signals; we never hold funds or manage accounts.
+
 **Honest positioning ([ADR-014](docs/00-overview/decisions-log.md)):** preliminary edge tests found **no tradeable alpha in the easy, freely-available signals** ([edge findings](docs/05-research/edge-findings.md)) — as expected from efficient markets and the LLM-trading literature. So this product's value is **augmentation** — faster research, monitoring, and disciplined process — **not** "AI that beats the market." It does not promise alpha; it refuses to risk money on anything unvalidated.
 
 ## Guiding principles

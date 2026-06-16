@@ -28,6 +28,7 @@ export const validationLevel = pgEnum("validation_level", ["L0", "L1", "L2", "L3
 
 export const accounts = pgTable("accounts", {
   id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id").notNull(), // tenant owner (better-auth user id)
   mode: tradingMode("mode").notNull().default("paper"),
   broker: text("broker").notNull().default("alpaca"),
   equity: numeric("equity", { precision: 18, scale: 2 }).notNull().default("0"),
@@ -94,4 +95,55 @@ export const audit = pgTable("audit", {
   before: jsonb("before"),
   after: jsonb("after"),
   correlationId: uuid("correlation_id"),
+});
+
+// --- Multi-tenant SaaS (broke.finance): per-user customization, BYO broker, memberships ---
+// Auth tables (user/session) are managed by better-auth; these reference its user id (text).
+
+export const membershipTier = pgEnum("membership_tier", ["free", "pro", "broker"]);
+export const followKind = pgEnum("follow_kind", ["congress_member", "fund", "strategy", "platform_trader"]);
+
+// Per-user feed + trading customization (flexible JSON so the product can evolve).
+export const userPreferences = pgTable("user_preferences", {
+  userId: text("user_id").primaryKey(),
+  feedConfig: jsonb("feed_config").notNull().default({}), // sectors, sources, tickers, filters
+  riskPrefs: jsonb("risk_prefs").notNull().default({}), // limits, sizing, autopilot on/off
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const watchlistItems = pgTable("watchlist_items", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id").notNull(),
+  symbol: text("symbol").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+// Who/what a user follows (a congress member, a fund, an in-app strategy, a copy-platform trader).
+export const follows = pgTable("follows", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id").notNull(),
+  kind: followKind("kind").notNull(),
+  ref: text("ref").notNull(), // e.g. "Nancy Pelosi", a strategy id, a fund CIK
+  label: text("label"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+// BYO broker: we NEVER store raw keys — credentials_ref points at an encrypted secret store entry.
+export const brokerConnections = pgTable("broker_connections", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: text("user_id").notNull(),
+  provider: text("provider").notNull(), // alpaca / ibkr / ...
+  mode: tradingMode("mode").notNull().default("paper"),
+  credentialsRef: text("credentials_ref"), // pointer to encrypted secret, NOT the key itself
+  status: text("status").notNull().default("disconnected"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+export const memberships = pgTable("memberships", {
+  userId: text("user_id").primaryKey(),
+  tier: membershipTier("tier").notNull().default("free"),
+  status: text("status").notNull().default("active"),
+  stripeCustomerId: text("stripe_customer_id"),
+  currentPeriodEnd: timestamp("current_period_end", { withTimezone: true }),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });

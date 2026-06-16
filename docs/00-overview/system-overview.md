@@ -61,7 +61,7 @@ Two philosophies, used as a hybrid ([agent runtime & scheduling](../01-architect
 
 - **Cloud API default, no GPU required** — Claude via API behind a swappable provider interface; optional small-model triage on the Mac mini ([ADR-011](decisions-log.md), [model hosting](../08-deployment/model-hosting.md)).
 - **Containerized, multi-arch, 12-factor** — develop on Windows, run on the Mac mini (ARM), deploy to a Linux VPS (x86) with no porting ([ADR-013](decisions-log.md), [deployment & portability](../08-deployment/deployment-and-portability.md)).
-- **Self-hostable, single-tenant, clone & deploy** — each user runs their own instance with their own keys; we don't hold others' funds/credentials ([ADR-012](decisions-log.md), [distribution](../08-deployment/distribution.md)).
+- **Multi-tenant membership SaaS** at **broke.finance** — users log in (better-auth), customize their feed + trading prefs, follow members/funds/strategies, and **connect their own broker (BYO) or paper-trade**; we sell software/signals (free/pro/broker tiers) and **never hold funds or manage accounts** ([ADR-015](decisions-log.md), supersedes ADR-012). Broker creds live in an encrypted secret store, never plaintext.
 
 ## Positioning (current)
 

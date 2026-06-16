@@ -4,6 +4,20 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 27 — 2026-06-16 — PIVOT: multi-tenant membership SaaS (broke.finance)
+
+Domain `broke.finance` purchased. New direction: a **multi-tenant membership SaaS** — software/signals only, users BYO broker or paper, we never hold funds ([ADR-015](docs/00-overview/decisions-log.md), supersedes ADR-012).
+
+- DB schema (`packages/db`): `accounts` now `user_id`-scoped; added `user_preferences`, `watchlist_items`, `follows`, `broker_connections` (creds via encrypted `credentials_ref`, never raw), `memberships` (tiers + Stripe-ready).
+- New `docs/01-architecture/multi-tenancy.md`; README/overview/distribution updated; ADR-012 marked superseded.
+- Next: better-auth wiring in apps/web + session-scoped API + per-user feed; make app Vercel-deploy-ready to point the domain.
+
+## Pass 26 — 2026-06-16 — Congress validation: INCONCLUSIVE (free data too shallow)
+
+Ran disclosure-date directional study on the free congress feed. Of 34 events, **only 7 had realized forward returns** (most disclosures too recent). net spread +2.6%, **t-stat 1.07 → not significant** at n=7. As predicted: free data can't validate this. Decision = pay for historical congressional data to test properly, or ship Congress as a transparency feature (no edge claim).
+
+---
+
 ## Pass 25 — 2026-06-16 — Congress aggregation (by-member, consensus, named filter)
 
 Added `aggregate_by_member`, `consensus_buys`, `trades_for_member` + pagination to `congress.py`; `scripts/congress_aggregate.py` demo. Live: 35 recent trades, most-active = Ro Khanna (11 buys); named filter works.

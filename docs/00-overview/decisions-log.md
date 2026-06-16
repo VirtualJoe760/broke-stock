@@ -141,3 +141,13 @@ Architecture Decision Records. Each captures a decision, why, and what would cha
 **Why:** Two preliminary L2 tests (headline-surprise, analyst-revisions) found **no edge** ([edge findings](../05-research/edge-findings.md)) — consistent with efficient markets and the literature (LLMs augment, they don't autonomously generate alpha). Positioning the product on augmentation is honest, defensible to a client, and immune to the "no edge" base rate. Selling "beats the market" would be AI-washing.
 
 **Changes it if:** a signal clears the validation ladder to L4 (paper-proven) with real significance — then a *validated* strategy can be offered as a feature, still without over-promising.
+
+---
+
+## ADR-015 — Multi-tenant SaaS, software/signals only, BYO broker (supersedes ADR-012)
+
+**Decision:** `broke.finance` is a **multi-tenant membership SaaS**. Users authenticate (better-auth), customize their feed + trading preferences, follow members/funds/strategies, and **connect their own broker (BYO) or paper-trade**. We sell the **software + signals + copy-ideas** (free / pro / broker tiers). We **never hold user funds or place trades for them as a manager** → not a broker-dealer or RIA. Signals/copy-ideas are framed as **educational/informational with disclaimers**, not personalized investment advice. Broker credentials live in an **encrypted secret store** (DB holds only a `credentials_ref`), never plaintext.
+
+**Why:** the product vision (memberships for brokers/day-traders, customizable, copy-trading) and the only lean + legal path — software, not money management. **Supersedes [ADR-012](#adr-012--distribution-self-hostable-single-tenant-clone--deploy)** (single-tenant self-host), which fit a personal/self-host framing we've moved past.
+
+**Changes it if:** we ever custody funds or manage accounts (→ broker-dealer/RIA licensing required, a deliberate separate decision), or a regulator deems the signals "advice" (→ tighten to pure data/education).
