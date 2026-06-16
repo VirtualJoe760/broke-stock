@@ -4,6 +4,17 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 8 — 2026-06-16 — strategy & sizing
+
+Done:
+- `broke_engine/strategies/sizing.py` — `decayed_score` (time-decay + confidence-weighted signal aggregation, surprise-weighted), `daily_volatility_pct`, `target_weight` (vol-scaled, capped, min-conviction gate), `SizingParams`.
+- `test_sizing.py` (7 cases). **Verified offline:** empty→0, recent outweighs stale, cap at 5%, below-min→0, lower vol→larger size, vol calc correct.
+- Bugfix caught by verification: `Signal.rationale` now defaults to "" (it isn't a required schema field) so signals construct without it.
+
+Next: execution adapter interface + simulated matcher (paper fills), then the Next.js frontend.
+
+---
+
 ## Pass 7 — 2026-06-16 — risk gate (build resumed, broader scope)
 
 Build **resumed** with an expanded scope: now building everything that needs no real keys/data/trade — frontend, API endpoints, deterministic logic, alerts, tests.

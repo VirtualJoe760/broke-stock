@@ -50,7 +50,7 @@ class Signal:
     magnitude: Magnitude
     time_horizon: TimeHorizon
     confidence: float  # 0.0 .. 1.0
-    rationale: str
+    rationale: str = ""  # optional; not in the required JSON-schema fields
 
     def __post_init__(self) -> None:
         if not self.ticker:
