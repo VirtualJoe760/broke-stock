@@ -4,7 +4,19 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
-## ✅ OVERNIGHT BUILD COMPLETE — loop stopped (2026-06-16)
+## Pass 7 — 2026-06-16 — risk gate (build resumed, broader scope)
+
+Build **resumed** with an expanded scope: now building everything that needs no real keys/data/trade — frontend, API endpoints, deterministic logic, alerts, tests.
+
+Done:
+- `broke_engine/risk.py` — `RiskGate` + `RiskLimits` (max position %, gross exposure %, daily-loss kill switch, weekly new-position cap, options ban), `OrderIntent`, `AccountState`, `RiskDecision`.
+- `test_risk.py` (6 cases). **Verified offline:** clean order approved; oversized / options / weekly-cap rejected; daily-loss trips kill switch; options allowed when enabled.
+
+Next: strategy & sizing (signal aggregation + vol-scaled sizing), execution adapter + simulated matcher, then the Next.js frontend (needs an npm install), API endpoints, alert/agent stubs, CI.
+
+---
+
+## (superseded) Phase 0 + Phase 1 skeleton complete — build later RESUMED with broader scope (2026-06-16)
 
 Phase 0 + the Phase 1 skeleton are done. The loop has ended itself per its stop condition. Everything is committed on `build/foundation` and pushed to GitHub. **No keys were used, nothing traded, nothing spent.**
 
