@@ -4,6 +4,22 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 21 — 2026-06-16 — L2 v2 verdict: NO edge demonstrated
+
+Catalyst-filtered, cost-adjusted, post-cutoff (Feb–May 2026), 10 names, 46 catalyst events.
+
+**Result: 0 long / 1 short signals — only 1 of 46 cleared the surprise≥0.4 gate. t-stat 0.0 (n=1). No edge demonstrated.**
+
+Honest interpretation:
+- Claude judged 45/46 catalyst headlines as already-priced-in / not surprising. At a sensible bar the signal almost never fires.
+- We deliberately did NOT lower the threshold to manufacture signals (that's p-hacking).
+- Likely causes: markets price these headlines efficiently; OR headline-only surprise is too thin (would need full article text, transcripts, price/volume confirmation).
+- This is the validation ladder working: "insufficient evidence", not "it works". The headline-surprise idea, as built, does not clear L2.
+
+Implication for autopilot: paper autopilot is safe to RUN and WATCH (mechanics), but it will rarely trade at an honest threshold — so it's *exploration*, not a proven strategy.
+
+---
+
 ## Pass 20 — 2026-06-16 — FIX: gitignore was excluding the engine data package
 
 **Bug caught:** `.gitignore` had a broad `data/` rule (intended for market-data dumps) that silently ignored `services/engine/broke_engine/data/` — so `store.py`, `models.py`, `polygon_store.py`, `polygon_news.py`, `__init__.py` were **never committed**. A clean clone / CI would fail to import the data layer. (Local runs worked only because the files exist on disk.)
