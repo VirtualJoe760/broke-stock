@@ -4,6 +4,19 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 3 — 2026-06-16 — Drizzle schema (app state)
+
+Done:
+- `packages/db`: Drizzle schema (`src/schema.ts`) for Postgres/Neon — `accounts`, `strategies` (with L0–L5 validation_level + frozen params), `orders` (idempotent client_order_id, correlation_id), `positions`, `fills`, `audit`.
+- `package.json`, `drizzle.config.ts`, `tsconfig.json`, README.
+- Migrations are generated against a real `DATABASE_URL` later — not during the offline build.
+
+Phase 0 is essentially complete (engine config + LLM provider, FastAPI skeleton, Dockerfile, tests, DB schema). Remaining Phase 0 niceties deferred (need network/npm): Next.js web scaffold, CI multi-arch build.
+
+Next: **Phase 1 skeletons** — DuckDB point-in-time data store interface (mock data), Claude signal schema as pydantic models, and the wheel backtest/event-study harness on synthetic data.
+
+---
+
 ## Pass 2 — 2026-06-16 — engine API skeleton
 
 Done:
