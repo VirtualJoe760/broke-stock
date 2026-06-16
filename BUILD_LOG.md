@@ -4,6 +4,20 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 22 — 2026-06-16 — Signal #2 (analyst revisions): NO edge either
+
+FMP free tier: transcripts + news = PAID (402); **analyst grades + fundamentals = free**. Pivoted to a pure factor test (no LLM): long analyst upgrades, short downgrades, 5-day forward returns.
+
+**Result: no edge. 15 events (FMP free quota 402'd AVGO/MU/CRM). Upgrades +2.74% / downgrades +6.88% fwd-5d → gross spread −4.14%, net −4.34%, t-stat −0.23.** Downgraded names rallied (strong May tape); signal is noise at n=15.
+
+**Two signals tested, two nulls** (headline-surprise, analyst-revisions). Consistent with efficient markets — widely-watched signals are priced in. New code: `data/fmp_grades.py`, `research.run_directional_study`, `scripts/grade_l2.py`.
+
+⚠️ Security: the FMP key was exposed in an httpx error URL during the first run — should be rotated. Adapter now raises a sanitized error (no URL/key).
+
+Strategic implication: easy/free signals aren't producing edge. Options = test less-watched/faster signals (each a long shot), accept the hard base rate, or pivot product value toward augmentation/tooling (which holds regardless of alpha).
+
+---
+
 ## Pass 21 — 2026-06-16 — L2 v2 verdict: NO edge demonstrated
 
 Catalyst-filtered, cost-adjusted, post-cutoff (Feb–May 2026), 10 names, 46 catalyst events.
