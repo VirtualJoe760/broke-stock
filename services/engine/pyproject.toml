@@ -1,0 +1,26 @@
+[project]
+name = "broke-engine"
+version = "0.0.1"
+description = "broke trading engine — signal scoring, strategy, risk, execution (paper-first)"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2",
+    "pydantic-settings>=2",
+    "anthropic>=0.40",
+    "fastapi>=0.115",
+    "uvicorn>=0.32",
+    "httpx>=0.27",
+    "duckdb>=1.1",
+    "pandas>=2.2",
+]
+
+[project.optional-dependencies]
+engine = ["nautilus_trader>=1.200"]
+dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.11"]
+
+[tool.ruff]
+line-length = 100
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

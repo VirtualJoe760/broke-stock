@@ -1,0 +1,32 @@
+# broke — local/dev orchestration. Same images run on the Mac mini (ARM) and a Linux VPS (x86)
+# via multi-arch builds. Postgres is external (Neon); the frontend deploys on Vercel.
+services:
+  api:
+    build:
+      context: ./services/engine
+    env_file: .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - redis
+      - questdb
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  questdb:
+    image: questdb/questdb:latest
+    ports:
+      - "9000:9000"   # web console
+      - "9009:9009"   # ingestion (ILP)
+      - "8812:8812"   # postgres wire
+    volumes:
+      - questdb-data:/var/lib/questdb
+    restart: unless-stopped
+
+volumes:
+  questdb-data:
