@@ -4,6 +4,18 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 2 — 2026-06-16 — engine API skeleton
+
+Done:
+- FastAPI app (`api.py`) with `/health` and `/portfolio` (stub, reflects paper mode).
+- Entrypoint `__main__.py` (`python -m broke_engine`).
+- Engine `Dockerfile` (multi-arch friendly).
+- First test (`tests/test_llm_provider.py`) + mypy/pytest config.
+
+Mode: paper/mock; no keys; endpoints return stubs. Next: Drizzle schema, then Phase 1 (DuckDB point-in-time store + signal schema + wheel backtest harness on mock data).
+
+---
+
 ## Pass 1 — 2026-06-16 — Phase 0 kickoff
 
 **Branch:** `build/foundation` (main holds the committed docs).
