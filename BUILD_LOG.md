@@ -4,6 +4,17 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 24 — 2026-06-16 — Copy-trading feed: congressional trades (live)
+
+New augmentation feature: `data/congress.py` ingests FMP `senate-latest` + `house-latest` (free) → recent congressional stock trades (symbol, member, buy/sell, amount, disclosure + transaction dates, source link). `scripts/congress_feed.py` shows the feed.
+
+**Verified live:** 33 recent trades (e.g., Boozman→PLTR, Khanna basket, Taylor→GOOGL). Free-tier note: `limit` capped at 25 per call (clamped in adapter).
+
+- Hedge-fund 13F is NOT free on FMP (paywalled); would need SEC EDGAR (free, parse-heavy) or a paid source — deferred.
+- Honest: disclosure lag (~weeks) + survivorship still apply. Next: validate (does following congress post-disclosure beat?) before wiring copy-execution; surface in the dashboard.
+
+---
+
 ## Pass 23 — 2026-06-16 — RE-SCOPE to augmentation (ADR-014)
 
 Two null edge tests → decision to re-position the product from "beats the market" to **augmentation** (research + monitoring + disciplined process + the validation engine). Honest, sellable, immune to the no-edge base rate.
