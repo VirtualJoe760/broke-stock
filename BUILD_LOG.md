@@ -4,6 +4,18 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 5 — 2026-06-16 — Phase 1: signal schema
+
+Done:
+- `broke_engine/signals/` — the `Signal` schema (stdlib dataclass + enums: `EventType`, `Magnitude`, `TimeHorizon`) with range validation (sentiment -1..1, surprise/confidence 0..1).
+- `Signal.from_dict()` to parse LLM JSON (string enums coerced); `signal_json_schema()` for the structured-output tool the LLM must call.
+- Test `test_signal.py` (valid parse, out-of-range rejected, schema required fields).
+- **Verified offline:** parses a sample signal, rejects sentiment=1.5, schema required fields correct.
+
+Next (last Phase 1 chunk): the wheel backtest/event-study harness over MockPointInTimeStore — produces metrics with no keys.
+
+---
+
 ## Pass 4 — 2026-06-16 — Phase 1: point-in-time data store
 
 Done:
