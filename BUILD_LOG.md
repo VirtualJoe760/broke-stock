@@ -4,6 +4,18 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 10 — 2026-06-16 — Next.js frontend scaffold
+
+Done (hand-written, no npm install yet):
+- `apps/web` — Next.js App Router + TS scaffold: `package.json` (next/react/lightweight-charts), `tsconfig.json`, `next.config.mjs`, root `layout.tsx`, dark-theme `globals.css`, landing `page.tsx` (PAPER banner + links to /trader and /digest).
+- `lib/mock.ts` — shared paper-mode mock data (portfolio, positions w/ AI confidence, AI proposal, scored news, daily brief, equity curve, risk state) for the dashboards.
+
+Not verified in-browser: needs `npm install` (a network op left for the user / a later pass) — node_modules absent, so no preview yet.
+
+Next: `/trader` cockpit page, then `/digest` page (consuming lib/mock), then FastAPI endpoints, alert/agent stubs, CI.
+
+---
+
 ## Pass 9 — 2026-06-16 — execution adapter + simulated matcher
 
 Done:

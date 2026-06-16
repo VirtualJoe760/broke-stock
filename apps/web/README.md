@@ -1,10 +1,19 @@
 # broke web
 
-Next.js + React + TypeScript frontend (deploys on Vercel). Hosts the two dashboards:
+Next.js (App Router) + TypeScript frontend. Hosts the two dashboards:
 
-- [Content dashboard](../../docs/02-frontend/content-dashboard.md) — the financial digest.
-- [Trader dashboard](../../docs/02-frontend/trader-dashboard.md) — the cockpit (TradingView Lightweight Charts).
+- [Trader cockpit](../../docs/02-frontend/trader-dashboard.md) — `/trader`
+- [Content digest](../../docs/02-frontend/content-dashboard.md) — `/digest`
 
-Talks to the engine over the [API](../../docs/01-architecture/api-orchestration.md) (REST + WebSocket). Auth via better-auth.
+Talks to the engine over the [API](../../docs/01-architecture/api-orchestration.md); currently uses `lib/mock.ts` (paper-mode mock data) until the API is wired.
 
-> Placeholder. The Next.js app is scaffolded in a later Phase 0 pass (requires `npm`/network). Standard current Next.js — this is a greenfield project (no legacy constraints).
+## Run
+
+```
+npm install        # not run during the offline build — do this first
+npm run dev        # http://localhost:3000
+```
+
+## Status
+
+Hand-written scaffold (no `npm install` yet): App Router layout, dark theme, landing page, shared mock data. Dashboard pages (`/trader`, `/digest`) are built in subsequent passes. Charts use `lightweight-charts`.
