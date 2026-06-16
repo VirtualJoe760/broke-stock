@@ -4,6 +4,16 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## Pass 12 — 2026-06-16 — content digest page
+
+Done:
+- `apps/web/app/digest/page.tsx` — content digest on mock data: AI daily brief hero + key points, "why we hold" position theses (surprise + P&L), scored news feed with priced-in flag, curated media cards.
+- **VERIFIED:** `next build` exit 0; `/digest` in the route list (6 static pages). Both dashboards build cleanly.
+
+Frontend (landing + /trader + /digest) is functionally complete on mock data. Next: FastAPI endpoints (B) returning mock/stub data + WebSocket stub, then alert/agent stubs (D), CI (E).
+
+---
+
 ## Pass 11 — 2026-06-16 — trader cockpit page (+ deps installed, build verified)
 
 Done:
