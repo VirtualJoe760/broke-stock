@@ -4,6 +4,43 @@ Append-only record of autonomous build passes so progress is reviewable. Newest 
 
 ---
 
+## ✅ OVERNIGHT BUILD COMPLETE — loop stopped (2026-06-16)
+
+Phase 0 + the Phase 1 skeleton are done. The loop has ended itself per its stop condition. Everything is committed on `build/foundation` and pushed to GitHub. **No keys were used, nothing traded, nothing spent.**
+
+### What's built (and verified to run offline)
+- **Phase 0:** monorepo + docker-compose + `.env.example`; engine config + **swappable LLM provider** (Anthropic default / OpenAI-compatible for triage); FastAPI skeleton (`/health`, `/portfolio` stubs) + Dockerfile; **Drizzle schema** (accounts, strategies w/ L0–L5, orders, positions, fills, audit).
+- **Phase 1 skeleton:** **point-in-time data store** (no-lookahead, verified); **signal schema** (validated, JSON-schema for structured output, verified); **wheel backtest harness** (runs over mock data, emits return/drawdown/premium/assignment metrics, verified).
+
+### Honest status — what is NOT done (needs you + supervision)
+- **No real edge demonstrated.** The wheel "result" is synthetic-data + proxy-premium noise — pre-L2. Nothing has climbed the validation ladder.
+- **Stubs awaiting keys/data:** `AnthropicProvider.complete` (needs `ANTHROPIC_API_KEY`), `DuckDBPointInTimeStore` (needs real market data via Polygon/Alpaca), the wheel's proxy premiums (need a real option chain/IV).
+- **Deferred Phase 0 niceties** (need npm/network): Next.js web scaffold, CI multi-arch image build.
+
+### Your move in the morning (supervised)
+1. `git -C F:\web-clients\joseph-sardella\broke push` is already working — review `build/foundation` (or open the PR) and merge when happy.
+2. Put real keys in a local `.env` (Anthropic, Alpaca **paper**) — never in chat.
+3. Then the first real work: implement `AnthropicProvider.complete`, wire a real data source into the point-in-time store, and run the **L2 event study** to find out if any signal/strategy actually predicts returns. That's the first real test of edge.
+
+### Run it yourself
+```
+$env:PYTHONPATH="F:\web-clients\joseph-sardella\broke\services\engine"
+python -c "from datetime import datetime,timezone; from broke_engine.data.store import MockPointInTimeStore; from broke_engine.strategies import WheelBacktest; print(WheelBacktest(MockPointInTimeStore()).run('WHEEL', datetime(2024,1,1,tzinfo=timezone.utc), datetime(2024,12,31,tzinfo=timezone.utc)))"
+```
+
+---
+
+## Pass 6 — 2026-06-16 — Phase 1: wheel backtest harness
+
+Done:
+- `broke_engine/strategies/wheel.py` — `WheelBacktest` over `PointInTimeStore`: cash-secured puts → assignment → covered calls, with metrics (return, max drawdown, premium collected, assignment loss, cycles).
+- Test `test_wheel.py`; **verified offline:** 13 cycles, +2.15%, 0% DD on mock data (0 assignments — artifact of upward-drift synthetic series + proxy premiums; explicitly pre-L2, not real edge).
+- Premiums are crude proxies (no real IV/Greeks) — clearly caveated in code; replaced by real option data before any result is trusted.
+
+Phase 1 skeleton complete → **loop stopped**.
+
+---
+
 ## Pass 5 — 2026-06-16 — Phase 1: signal schema
 
 Done:
