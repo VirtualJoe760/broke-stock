@@ -1,6 +1,10 @@
-import { aiActivity, type ActivityType } from "@/lib/mock";
+import { promises as fs } from "fs";
+import path from "path";
+import { aiActivity as sampleActivity, type AiActivity, type ActivityType } from "@/lib/mock";
 
-const TYPE_META: Record<ActivityType, { label: string; color: string }> = {
+export const dynamic = "force-dynamic";
+
+const TYPE_META: Record<string, { label: string; color: string }> = {
   signal: { label: "Scored", color: "var(--muted)" },
   proposed: { label: "Proposed", color: "var(--info)" },
   approved: { label: "Approved", color: "var(--green)" },
@@ -11,23 +15,49 @@ const TYPE_META: Record<ActivityType, { label: string; color: string }> = {
 
 function outcomeColor(o: string): string {
   if (o.includes("+")) return "var(--green)";
-  if (o.startsWith("Closed -") || o.includes("-")) return "var(--red)";
+  if (o.includes("-") || o === "Blocked" || o === "Rejected") return "var(--red)";
   return "var(--muted)";
 }
 
-export default function Activity() {
+async function loadActivity(): Promise<{ data: AiActivity[]; live: boolean }> {
+  try {
+    const raw = await fs.readFile(path.join(process.cwd(), "lib", "live-activity.json"), "utf8");
+    const data = JSON.parse(raw);
+    if (Array.isArray(data) && data.length > 0) return { data, live: true };
+  } catch {
+    // no live feed yet — fall back to the sample
+  }
+  return { data: sampleActivity, live: false };
+}
+
+export default async function Activity() {
+  const { data, live } = await loadActivity();
+
   return (
     <div className="container">
-      <h1 style={{ fontWeight: 500 }}>AI activity</h1>
-      <p className="muted" style={{ marginTop: -8, maxWidth: 640 }}>
-        Every action the AI takes — what it did, the reasoning it reached, and how it turned out.
-        Paper mode; nothing here is investment advice. The trail: <strong>score → propose → you
-        approve → fill → outcome</strong>.
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <h1 style={{ fontWeight: 500 }}>AI activity</h1>
+        <span
+          style={{
+            fontSize: 12,
+            padding: "2px 10px",
+            borderRadius: 999,
+            color: live ? "var(--green)" : "var(--muted)",
+            border: `1px solid ${live ? "var(--green)" : "var(--border)"}`,
+          }}
+        >
+          {live ? "● live (paper)" : "sample"}
+        </span>
+      </div>
+      <p className="muted" style={{ marginTop: -2, maxWidth: 660 }}>
+        Every action the AI takes autonomously — what it did, the reasoning it reached, and how it
+        turned out. Play money; not investment advice. The trail:{" "}
+        <strong>score → decide → fill → outcome</strong>. Results shown are real — wins and losses.
       </p>
 
       <div style={{ marginTop: 24, display: "flex", flexDirection: "column", gap: 12 }}>
-        {aiActivity.map((a, i) => {
-          const meta = TYPE_META[a.type];
+        {data.map((a, i) => {
+          const meta = TYPE_META[a.type as ActivityType] ?? { label: a.type, color: "var(--muted)" };
           return (
             <div key={i} className="card" style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
               <div style={{ minWidth: 132 }}>

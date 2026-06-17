@@ -27,6 +27,10 @@ build/
 *.sqlite
 snapshots/
 
+# Generated paper-trading feed (autonomous cycle output)
+apps/web/lib/live-activity.json
+apps/web/lib/live-portfolio.json
+
 # OS / editor
 .DS_Store
 Thumbs.db
