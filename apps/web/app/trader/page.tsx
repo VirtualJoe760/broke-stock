@@ -51,6 +51,7 @@ function EquityChart() {
 export default function Trader() {
   const [decision, setDecision] = useState<"pending" | "approved" | "rejected">("pending");
   const [killArmed, setKillArmed] = useState(false);
+  const [auto, setAuto] = useState(false);
 
   return (
     <div className="container">
@@ -101,14 +102,30 @@ export default function Trader() {
       </div>
 
       <div className="card" style={{ marginBottom: 16, borderColor: "var(--info)" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
           <strong style={{ fontWeight: 500 }}>AI trade proposal</strong>
-          <span className="muted" style={{ fontSize: 12 }}>surprise {proposal.surprise}</span>
+          <button
+            onClick={() => setAuto((v) => !v)}
+            style={{
+              fontSize: 12,
+              borderColor: auto ? "var(--green)" : "var(--border)",
+              color: auto ? "var(--green)" : "var(--muted)",
+            }}
+          >
+            {auto ? "● Automate: ON" : "Automate: off"}
+          </button>
         </div>
         <p style={{ margin: "0 0 12px" }}>
-          {proposal.side === "buy" ? "Buy" : "Sell"} <strong>{proposal.qty} {proposal.symbol}</strong> — {proposal.rationale}.
+          {proposal.side === "buy" ? "Buy" : "Sell"} <strong>{proposal.qty} {proposal.symbol}</strong> — {proposal.rationale} (surprise {proposal.surprise}).
         </p>
-        {decision === "pending" ? (
+        {auto ? (
+          <div className="pos" style={{ fontSize: 14 }}>
+            ● Autopilot on — auto-executed (paper), routed through the risk gate. No approval needed.
+            <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
+              Live trading stays gated until a strategy is validation-proven.
+            </div>
+          </div>
+        ) : decision === "pending" ? (
           <div className="row">
             <button className="buy" onClick={() => setDecision("approved")}>Approve</button>
             <button className="sell" onClick={() => setDecision("rejected")}>Reject</button>
