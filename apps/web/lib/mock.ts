@@ -70,3 +70,66 @@ export const riskState = {
   grossExposurePct: 63,
   dailyLossUsedPct: 18,
 };
+
+// AI decision history — every action the AI takes, the reasoning, and the outcome.
+export type ActivityType = "signal" | "proposed" | "approved" | "rejected" | "filled" | "closed";
+
+export interface AiActivity {
+  ts: string;
+  type: ActivityType;
+  symbol: string;
+  action: string; // what the AI did
+  reasoning: string; // why — the conclusion it reached
+  outcome?: string; // result, if resolved
+}
+
+export const aiActivity: AiActivity[] = [
+  {
+    ts: "2026-06-16 09:32",
+    type: "filled",
+    symbol: "MU",
+    action: "Bought 40 MU @ $98.10 (paper)",
+    reasoning: "Executed the approved proposal. Sized to 3% of equity, within position + exposure limits; bracket stop set at -7%.",
+    outcome: "Open · +0.0%",
+  },
+  {
+    ts: "2026-06-16 09:30",
+    type: "proposed",
+    symbol: "MU",
+    action: "Proposed BUY 40 MU",
+    reasoning: "Earnings-call sentiment surprise 0.74 (not yet priced in), memory-pricing tailwind, sector momentum confirmed. Confidence 0.66. Cleared the risk gate.",
+    outcome: "Approved by you",
+  },
+  {
+    ts: "2026-06-16 08:31",
+    type: "signal",
+    symbol: "NVDA",
+    action: "Scored news: Taiwan exports beat estimates",
+    reasoning: "Positive read-through but indirect and largely priced in (surprise 0.25, confidence 0.55). Below the 0.5 conviction bar.",
+    outcome: "No trade",
+  },
+  {
+    ts: "2026-06-15 15:58",
+    type: "rejected",
+    symbol: "KRE",
+    action: "Proposed SHORT KRE — you rejected",
+    reasoning: "Analyst downgrade, sentiment -0.6, but the move looked mostly priced in. You declined; logged so the agent learns the preference.",
+    outcome: "Rejected",
+  },
+  {
+    ts: "2026-06-12 10:05",
+    type: "closed",
+    symbol: "AVGO",
+    action: "Closed AVGO at target",
+    reasoning: "Networking-bottleneck thesis played out; price hit the +8% target and the trailing stop locked it in.",
+    outcome: "Closed +8.1%",
+  },
+  {
+    ts: "2026-06-11 09:34",
+    type: "filled",
+    symbol: "NVDA",
+    action: "Bought 120 NVDA @ $171.40 (paper)",
+    reasoning: "Guidance-raise event, surprise 0.81 (major, under-reacted vs consensus). High conviction; sized at the 5% cap.",
+    outcome: "Open · +12.4%",
+  },
+];
