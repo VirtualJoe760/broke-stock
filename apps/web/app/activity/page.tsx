@@ -19,6 +19,22 @@ function outcomeColor(o: string): string {
   return "var(--muted)";
 }
 
+// Render timestamps as 12-hour Pacific time, e.g. "Jun 17, 2:17 PM PDT".
+function formatTs(ts: string): string {
+  const iso = ts.includes("T") ? ts : ts.replace(" ", "T") + "Z";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return ts;
+  return new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/Los_Angeles",
+    month: "short",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+    timeZoneName: "short",
+  }).format(d);
+}
+
 async function loadActivity(): Promise<{ data: AiActivity[]; live: boolean }> {
   try {
     const raw = await fs.readFile(path.join(process.cwd(), "lib", "live-activity.json"), "utf8");
@@ -61,7 +77,7 @@ export default async function Activity() {
           return (
             <div key={i} className="card" style={{ display: "flex", gap: 16, alignItems: "flex-start" }}>
               <div style={{ minWidth: 132 }}>
-                <div className="muted" style={{ fontSize: 12 }}>{a.ts}</div>
+                <div className="muted" style={{ fontSize: 12 }}>{formatTs(a.ts)}</div>
                 <span
                   style={{
                     display: "inline-block",
