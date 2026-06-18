@@ -3,12 +3,14 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { signIn, signUp } from "@/lib/auth-client";
+import { signIn } from "@/lib/auth-client";
 
+const THINKBIGJOE_URL = process.env.NEXT_PUBLIC_THINKBIGJOE_URL || "https://thinkbigjoe.com";
+
+// Sign-in only. There's no signup here — broke accounts are created on thinkbigjoe
+// (shared user table), so we link there for new accounts.
 export default function LoginPage() {
   const router = useRouter();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
@@ -18,13 +20,10 @@ export default function LoginPage() {
     e.preventDefault();
     setBusy(true);
     setError(null);
-    const res =
-      mode === "signin"
-        ? await signIn.email({ email, password })
-        : await signUp.email({ email, password, name: name || email.split("@")[0] });
+    const res = await signIn.email({ email, password });
     setBusy(false);
     if (res.error) {
-      setError(res.error.message || "Something went wrong. Check your details and try again.");
+      setError(res.error.message || "Couldn't sign in. Check your details and try again.");
       return;
     }
     router.push("/");
@@ -39,18 +38,9 @@ export default function LoginPage() {
       >
         <h1 style={{ fontSize: 28, fontWeight: 800, letterSpacing: "-0.02em", marginBottom: 4 }}>broke</h1>
         <p style={{ opacity: 0.7, marginBottom: 12, fontSize: 14 }}>
-          {mode === "signin" ? "Sign in to your account." : "Create your account."} Your ThinkBigJoe
-          login works here.
+          Sign in with your ThinkBigJoe account.
         </p>
 
-        {mode === "signup" && (
-          <input
-            placeholder="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            style={inputStyle}
-          />
-        )}
         <input
           type="email"
           placeholder="Email"
@@ -71,16 +61,15 @@ export default function LoginPage() {
         {error && <p style={{ color: "#f87171", fontSize: 13 }}>{error}</p>}
 
         <button type="submit" disabled={busy} style={buttonStyle}>
-          {busy ? "…" : mode === "signin" ? "Sign in" : "Create account"}
+          {busy ? "…" : "Sign in"}
         </button>
 
-        <button
-          type="button"
-          onClick={() => { setMode(mode === "signin" ? "signup" : "signin"); setError(null); }}
-          style={{ background: "none", border: "none", opacity: 0.7, fontSize: 13, cursor: "pointer", marginTop: 4 }}
-        >
-          {mode === "signin" ? "Need an account? Sign up" : "Have an account? Sign in"}
-        </button>
+        <p style={{ opacity: 0.7, fontSize: 13, marginTop: 4 }}>
+          Don&apos;t have an account?{" "}
+          <a href={`${THINKBIGJOE_URL}/login?from=broke`} style={{ color: "#16a34a", fontWeight: 600 }}>
+            Create one at ThinkBigJoe →
+          </a>
+        </p>
       </form>
     </main>
   );
